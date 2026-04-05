@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>ELIMINATOR v30</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="app" class="app">
+    <!-- HEADER GLOBAL -->
+    <header class="app-header">
+      <div class="app-header__left">
+        <button id="headerBackBtn" class="icon-btn icon-btn--ghost" type="button" aria-label="Retour" hidden>✕</button>
+        <button id="headerMenuBtn" class="icon-btn icon-btn--ghost" type="button" aria-label="Ouvrir le menu">☰</button>
+      </div>
+
+      <div class="app-header__center">
+        <h1 id="screenTitle" class="screen-title">EXERCICES</h1>
+      </div>
+
+      <div class="app-header__right">
+        <button id="headerSoundBtn" class="icon-btn icon-btn--ghost" type="button" aria-label="Son">🔊</button>
+        <button id="headerSettingsBtn" class="icon-btn icon-btn--ghost" type="button" aria-label="Paramètres">⚙</button>
+      </div>
+    </header>
+
+    <!-- NAVIGATION PRINCIPALE -->
+    <nav id="topTabs" class="top-tabs" aria-label="Navigation principale">
+      <button class="top-tab is-active" data-main-tab="tasks" type="button">TOUS</button>
+      <button class="top-tab" data-main-tab="today" type="button">CE JOUR</button>
+      <button class="top-tab" data-main-tab="done" type="button">FINIES</button>
+    </nav>
+
+    <!-- CONTENU -->
+    <main class="screen-wrap">
+      <!-- ÉCRAN PRINCIPAL : TÂCHES -->
+      <section id="screen-tasks" class="screen-page is-active" aria-label="Liste des tâches">
+        <section class="summary-strip">
+          <div class="summary-box">
+            <div class="summary-box__label">ACTIVES</div>
+            <div id="statActiveMain" class="summary-box__value">0</div>
+          </div>
+
+          <div class="summary-box">
+            <div class="summary-box__label">FINIES</div>
+            <div id="statDoneMain" class="summary-box__value">0</div>
+          </div>
+
+          <div class="summary-box">
+            <div class="summary-box__label">ÉTORIONS</div>
+            <div id="statEtorionsMain" class="summary-box__value">0</div>
+          </div>
+        </section>
+
+        <section class="progress-panel">
+          <div class="progress-panel__head">
+            <div class="progress-panel__title">PROGRESSION</div>
+            <div id="progressPctLabel" class="progress-panel__pct">100%</div>
+          </div>
+
+          <div id="progressBar" class="mono-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100">
+            <div id="progressFill" class="mono-progress__fill"></div>
+          </div>
+        </section>
+
+        <section class="focus-card">
+          <div class="focus-card__topline">
+            <span class="focus-card__label">MISSION EN COURS</span>
+            <button id="taskInfoBtn" class="mini-btn" type="button">DÉTAILS</button>
+          </div>
+
+          <div id="taskTitle" class="focus-card__title">Aucune tâche sélectionnée</div>
+
+          <div id="taskMetaDetails" class="focus-card__meta" hidden>
+            Catégorie : <span id="metaCat">—</span>
+            · Étorions : <span id="metaEt">—</span>
+            · Temps : <span id="metaTimer">00:00</span>
+          </div>
+
+          <div class="focus-card__actions">
+            <button id="undoBtn" class="action-square" type="button">UNDO</button>
+            <button id="rouletteBtn" class="action-square action-square--dark" type="button">ROULETTE</button>
+            <button id="bombBtn" class="action-square" type="button">-1 ÉTO</button>
+            <button id="doneTaskBtn" class="action-square" type="button">TERMINER</button>
+          </div>
+
+          <div class="focus-card__subactions">
+            <button id="editTaskBtn" class="text-btn" type="button">ÉDITER</button>
+            <button id="belowListToggleBtn" class="text-btn" type="button">LISTE</button>
+            <button id="openInboxBtn" class="text-btn" type="button">INBOX</button>
+            <button id="openStatsBtn" class="text-btn" type="button">STATS</button>
+          </div>
+        </section>
+
+        <section id="taskListSection" class="list-section">
+          <div class="section-head">
+            <div class="section-head__title">LISTE</div>
+            <div class="section-head__tools">
+              <button id="sortCycleBtn" class="mini-btn" type="button">TRI</button>
+              <button id="filterBtn" class="mini-btn" type="button">FILTRES</button>
+            </div>
+          </div>
+
+          <div id="taskList" class="task-stack"></div>
+        </section>
+      </section>
+
+      <!-- ÉCRAN INBOX -->
+      <section id="screen-inbox" class="screen-page" aria-label="Inbox">
+        <section class="settings-stack">
+          <article class="setting-card">
+            <div class="setting-card__head">
+              <div class="setting-card__title">INBOX</div>
+              <div class="setting-card__desc">COLLE TA LISTE BRUTE, UNE LIGNE PAR TÂCHE</div>
+            </div>
+
+            <textarea
+              id="inboxText"
+              class="mono-textarea"
+              rows="10"
+              placeholder="ADMIN
+Répondre à Anna - 2
+Rapport patient 3
+
+PERSO
+Batterie 2
+Ranger bureau 1"
+            ></textarea>
+
+            <div class="inline-actions">
+              <button id="inboxEditableToggle" class="action-square" type="button" aria-pressed="true">ÉDITION ON</button>
+              <button id="inboxAdd" class="action-square action-square--dark" type="button">VALIDER</button>
+              <button id="inboxClear" class="action-square" type="button">EFFACER</button>
+            </div>
+          </article>
+
+          <article class="setting-card">
+            <div class="setting-card__head">
+              <div class="setting-card__title">LISTES VALIDÉES</div>
+              <div class="setting-card__desc">HISTORIQUE CLASSÉ PAR DATE</div>
+            </div>
+
+            <div id="inboxHistoryList" class="task-stack"></div>
+          </article>
+        </section>
+      </section>
+
+      <!-- ÉCRAN PARAMÈTRES -->
+      <section id="screen-settings" class="screen-page" aria-label="Paramètres">
+        <section class="settings-stack">
+          <article class="setting-card">
+            <div class="setting-card__title">MODE</div>
+            <div class="setting-card__desc">APPARENCE GÉNÉRALE</div>
+            <div class="inline-actions">
+              <button id="modeToggle" class="action-square" type="button" aria-pressed="false">CLAIR</button>
+              <button id="focusBtn" class="action-square" type="button" aria-pressed="false">FOCUS</button>
+              <button id="seriousToggle" class="action-square" type="button" aria-pressed="false">SÉRIEUX</button>
+            </div>
+          </article>
+
+          <article class="setting-card">
+            <div class="setting-card__title">THÈME</div>
+            <div class="setting-card__desc">CHANGER LE THÈME VISUEL</div>
+            <div class="inline-actions">
+              <button id="seasonCycle" class="action-square" type="button">NOIR & BLANC</button>
+            </div>
+          </article>
+
+          <article class="setting-card">
+            <div class="setting-card__title">POMODORO</div>
+            <div class="setting-card__desc">TEMPS DE TRAVAIL ET DE PAUSE</div>
+            <div class="counter-row">
+              <button id="pomoMinusBtn" class="counter-btn" type="button">−</button>
+              <div id="pomoTime" class="counter-value">25:00</div>
+              <button id="pomoPlusBtn" class="counter-btn" type="button">+</button>
+            </div>
+            <div class="inline-actions">
+              <button id="pomoEdit" class="action-square" type="button">RÉGLER</button>
+              <button id="pomoReset" class="action-square" type="button">RESET</button>
+            </div>
+          </article>
+
+          <article class="setting-card">
+            <div class="setting-card__title">FLOW</div>
+            <div class="setting-card__desc">FATIGUE, MOTIVATION, CONSEILS, CÉLÉBRATIONS</div>
+
+            <div class="range-block">
+              <label class="range-label" for="fatigueInline">FATIGUE</label>
+              <input id="fatigueInline" class="mono-range" type="range" min="0" max="4" step="1">
+            </div>
+
+            <div class="range-block">
+              <label class="range-label" for="motivationInline">MOTIVATION</label>
+              <input id="motivationInline" class="mono-range" type="range" min="0" max="4" step="1">
+            </div>
+
+            <div class="inline-actions">
+              <button id="saveFlowBtn" class="action-square action-square--dark" type="button">SAUVER</button>
+              <button id="testTipBtn" class="action-square" type="button">TEST CONSEIL</button>
+              <button id="testCeleBtn" class="action-square" type="button">TEST CÉLÉBRATION</button>
+            </div>
+          </article>
+
+          <article class="setting-card">
+            <div class="setting-card__title">EXPORT</div>
+            <div class="setting-card__desc">SAUVEGARDE ET RAPPORT</div>
+            <div class="inline-actions">
+              <button id="exportBtn" class="action-square" type="button">JSON</button>
+              <button id="reportBtn" class="action-square" type="button">RAPPORT</button>
+              <button id="wipeBtn" class="action-square action-square--danger" type="button">RESET TOTAL</button>
+            </div>
+          </article>
+        </section>
+      </section>
+
+      <!-- ÉCRAN STATS -->
+      <section id="screen-stats" class="screen-page" aria-label="Statistiques">
+        <div class="subtabs" role="tablist" aria-label="Sous-onglets statistiques">
+          <button class="subtab is-active" data-stats-tab="history" type="button">HISTOIRE</button>
+          <button class="subtab" data-stats-tab="graph" type="button">GRAPHIQUE</button>
+        </div>
+
+        <div id="stats-history-tab" class="stats-tab-page is-active">
+          <section class="setting-card">
+            <div class="setting-card__title">HISTORIQUE</div>
+            <div class="setting-card__desc">TÂCHES, ÉTORIONS, ÉVOLUTION</div>
+            <div id="historyContent" class="task-stack"></div>
+          </section>
+        </div>
+
+        <div id="stats-graph-tab" class="stats-tab-page">
+          <section class="setting-card">
+            <div class="setting-card__title">GRAPHIQUE</div>
+            <div class="setting-card__desc">VUE SYNTHÉTIQUE</div>
+            <div id="statsContent" class="stats-graph-wrap"></div>
+          </section>
+        </div>
+      </section>
+
+      <!-- ÉCRAN NOTES -->
+      <section id="screen-notes" class="screen-page" aria-label="Notes">
+        <section class="settings-stack">
+          <article class="setting-card">
+            <div class="setting-card__title">NOTES</div>
+            <textarea id="notesArea" class="mono-textarea" rows="8"></textarea>
+          </article>
+
+          <article class="setting-card">
+            <div class="setting-card__title">RAPPELS</div>
+            <textarea id="remindersArea" class="mono-textarea" rows="6"></textarea>
+          </article>
+
+          <article class="setting-card">
+            <div class="setting-card__title">ENTRÉES RAPIDES</div>
+            <div id="notesEntriesList" class="task-stack"></div>
+          </article>
+        </section>
+      </section>
+    </main>
+
+    <!-- BARRE BASSE -->
+    <nav class="bottom-nav" aria-label="Navigation basse">
+      <button class="bottom-nav__item is-active" data-screen="tasks" type="button">
+        <span class="bottom-nav__label">LISTE</span>
+      </button>
+      <button class="bottom-nav__item" data-screen="inbox" type="button">
+        <span class="bottom-nav__label">INBOX</span>
+      </button>
+      <button class="bottom-nav__item" data-screen="stats" type="button">
+        <span class="bottom-nav__label">STATS</span>
+      </button>
+      <button class="bottom-nav__item" data-screen="notes" type="button">
+        <span class="bottom-nav__label">NOTES</span>
+      </button>
+      <button class="bottom-nav__item" data-screen="settings" type="button">
+        <span class="bottom-nav__label">RÉGLAGES</span>
+      </button>
+    </nav>
+  </div>
+
+  <!-- MODAL POMODORO -->
+  <div id="pomoModal" class="modal-shell" hidden role="dialog" aria-modal="true" aria-label="Pomodoro">
+    <div class="modal-box">
+      <div class="modal-box__head">
+        <div class="modal-box__title">POMODORO</div>
+        <button id="modalClose" class="icon-btn" type="button" aria-label="Fermer">✕</button>
+      </div>
+
+      <div class="modal-box__body">
+        <div class="setting-card setting-card--inner">
+          <label class="range-label" for="pomoMinutes">POMODORO</label>
+          <input id="pomoMinutes" class="mono-input" type="number" min="5" max="90">
+
+          <label class="range-label" for="breakMinutes">PAUSE</label>
+          <input id="breakMinutes" class="mono-input" type="number" min="1" max="30">
+
+          <label class="range-label" for="autoStartSel">AUTO START</label>
+          <select id="autoStartSel" class="mono-input">
+            <option value="auto">AUTOMATIQUE</option>
+            <option value="manual">MANUEL</option>
+          </select>
+        </div>
+
+        <div class="inline-actions">
+          <button id="pomoApply" class="action-square action-square--dark" type="button">APPLIQUER</button>
+          <button id="pomoResetModal" class="action-square" type="button">RESET</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL FILTRES -->
+  <div id="filterModal" class="modal-shell" hidden role="dialog" aria-modal="true" aria-label="Filtres">
+    <div class="modal-box">
+      <div class="modal-box__head">
+        <div class="modal-box__title">FILTRES</div>
+        <button id="filterCloseBtn" class="icon-btn" type="button" aria-label="Fermer">✕</button>
+      </div>
+
+      <div class="modal-box__body">
+        <label class="range-label" for="catFilter">CATÉGORIES</label>
+        <select id="catFilter" class="mono-input mono-input--multi" multiple size="8"></select>
+
+        <label class="range-label" for="viewFilter">VUE</label>
+        <select id="viewFilter" class="mono-input">
+          <option value="active">ACTIVES</option>
+          <option value="done">FINIES</option>
+          <option value="all">TOUTES</option>
+        </select>
+
+        <label class="range-label" for="sortFilter">TRI</label>
+        <select id="sortFilter" class="mono-input">
+          <option value="roulette">ROULETTE</option>
+          <option value="ordre">ORDRE D’IMPORT</option>
+          <option value="alpha">ALPHABÉTIQUE</option>
+          <option value="cat">CATÉGORIE</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- ÉLÉMENTS TECHNIQUES CACHÉS MAIS CONSERVÉS -->
+  <div hidden>
+    <button id="leftClose" type="button"></button>
+    <button id="rightClose" type="button"></button>
+    <button id="btnLeft" type="button"></button>
+    <button id="btnRight" type="button"></button>
+    <button id="listToggleBtn" type="button"></button>
+    <button id="setsToggleBtn" type="button"></button>
+    <button id="openNotes" type="button"></button>
+    <button id="openTyphonse" type="button"></button>
+    <button id="openKiffance" type="button"></button>
+    <button id="openStats" type="button"></button>
+    <button id="btnHideBelow" type="button"></button>
+    <button id="kiffAdd" type="button"></button>
+    <button id="kiffSuggest" type="button"></button>
+    <button id="kiffToTask" type="button"></button>
+    <button id="overlayKiffRefresh" type="button"></button>
+    <button id="overlayKiffToTask" type="button"></button>
+    <button id="prefsApply" type="button"></button>
+    <button id="prefsReset" type="button"></button>
+    <button id="habitAddBtn" type="button"></button>
+    <button id="hospResetToday" type="button"></button>
+    <button id="consResetToday" type="button"></button>
+    <button id="btnAddTyphonse" type="button"></button>
+    <button id="overlayClose" type="button"></button>
+    <button id="belowListToggleHidden" type="button"></button>
+
+    <input id="habitName" type="text">
+    <input id="habitSlots" type="number" value="8">
+    <input id="hospPatients" type="number">
+    <input id="consPatients" type="number">
+    <input id="celeChanceInline" type="number" value="0.30">
+    <input id="tipsChanceInline" type="number" value="0.18">
+    <input id="modeSel" type="text">
+    <input id="seasonSel" type="text">
+    <input id="fontSel" type="text">
+    <input id="uiScale" type="range">
+    <input id="seriousSel" type="text">
+    <input id="keepListFocusSel" type="text">
+    <input id="fatigueSel" type="range">
+    <input id="motivationSel" type="range">
+    <input id="workMinSel" type="number">
+    <input id="breakMinSel" type="number">
+    <input id="notesAreaPanel" type="text">
+    <input id="remindersAreaPanel" type="text">
+    <input id="kiffNew" type="text">
+    <input id="typhonseInput" type="text">
+
+    <div id="leftPanel"></div>
+    <div id="rightPanel"></div>
+    <div id="panelBack"></div>
+    <div id="modalBack"></div>
+    <div id="overlayModal"></div>
+    <div id="overlayTitle"></div>
+    <div id="overlay-notes"></div>
+    <div id="overlay-typhonse"></div>
+    <div id="overlay-kiffance"></div>
+    <div id="overlay-stats"></div>
+    <div id="kiffSuggestionBox"></div>
+    <div id="overlayKiffSuggestion"></div>
+    <div id="statsContentPanel"></div>
+    <div id="habitsContent"></div>
+    <div id="setsContent"></div>
+    <div id="calendarGrid"></div>
+    <div id="belowList"></div>
+    <div id="belowTasks"></div>
+    <div id="typhonseList"></div>
+    <textarea id="exportOut"></textarea>
+    <div id="leftPanelResizer"></div>
+    <div id="rightPanelResizer"></div>
+  </div>
+
+  <script src="state.js"></script>
+</body>
+</html>
